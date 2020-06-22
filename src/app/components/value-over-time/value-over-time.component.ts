@@ -22,7 +22,8 @@ declare var Plotly: any;
 export class ValueOverTimeComponent implements OnInit {
   constructor(private currencyService: CurrencyService) {}
 
-  symbols = Symbols;
+  //Variables
+  private symbols = Symbols;
   graphData = [];
   graphLayout = { title: "Rate changes over time" };
   graphConfig = { displayModeBar: false, responsive: true };
@@ -31,6 +32,8 @@ export class ValueOverTimeComponent implements OnInit {
   secondSymbolFilteredOptions: Observable<string[]>;
   currentDate = new Date();
 
+
+  //Form controls
   overTimeForm = new FormGroup({
     firstSymbol: new FormControl(Symbols.USD, [
       Validators.required,
@@ -44,16 +47,18 @@ export class ValueOverTimeComponent implements OnInit {
       new Date(
         this.currentDate.getFullYear(),
         this.currentDate.getMonth(),
-        this.currentDate.getDate() - 7
+        this.currentDate.getDate() - 7 //One week ago
       ),
-      this._datesValidator()
+      this._datesValidator() //Current date
     ),
     endDate: new FormControl(new Date(), this._datesValidator()),
   });
 
+  //Outputting this to separate variable to avoid unnecessary code repetitions
   formControls = this.overTimeForm.controls;
 
   ngOnInit(): void {
+    //Autocompletes
     this.firstSymbolFilteredOptions = this.formControls[
       "firstSymbol"
     ].valueChanges.pipe(
@@ -68,6 +73,7 @@ export class ValueOverTimeComponent implements OnInit {
       map((value) => this._optionsFilter(value))
     );
 
+    //Subscribing to form changes in order to update the data
     this.overTimeForm.valueChanges
       .pipe(debounceTime(300))
       .subscribe((newValue) => {
@@ -78,6 +84,7 @@ export class ValueOverTimeComponent implements OnInit {
     this._getRatesAndBuildGraph();
   }
 
+  //Filer for autocomplete in currency selects
   private _optionsFilter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
@@ -86,10 +93,12 @@ export class ValueOverTimeComponent implements OnInit {
     );
   }
 
+  //Takes response from the API, sorts data by date and transforms it into object for plotly graph
   private _transformToGraphData(response) {
     const rates = response.rates;
     let sortedRates = {};
     let graphs = {};
+    //Data sorting
     Object.keys(rates)
       .sort()
       .forEach(function (key) {
@@ -113,6 +122,7 @@ export class ValueOverTimeComponent implements OnInit {
     return Object.values(graphs);
   }
 
+  //Validator for currncy type inputs
   private _symbolValidator(allSymbols: any): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (isNullOrUndefined(control.value) || control.value === "") {
@@ -132,6 +142,7 @@ export class ValueOverTimeComponent implements OnInit {
     };
   }
 
+  //Validator for dates input.
   private _datesValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (isNullOrUndefined(control.value) || control.value === "") {
@@ -155,7 +166,8 @@ export class ValueOverTimeComponent implements OnInit {
     };
   }
 
-  public _endDatesFilter = (d: Date | null): boolean => {
+  //Filter for endDate input
+  public endDatesFilter = (d: Date | null): boolean => {
     if (d > new Date()) {
       return false;
     }
@@ -167,8 +179,8 @@ export class ValueOverTimeComponent implements OnInit {
     }
     return true;
   };
-
-  public _startDatesFilter = (d: Date | null): boolean => {
+ //Filter for startDate input
+  public startDatesFilter = (d: Date | null): boolean => {
     if (d > new Date()) {
       return false;
     }
@@ -181,6 +193,7 @@ export class ValueOverTimeComponent implements OnInit {
     return true;
   };
 
+  //Requests new rates from the API, transforms this data and redraws plotly graph
   private _getRatesAndBuildGraph() {
     this.currencyService
       .getComparison(

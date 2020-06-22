@@ -1,0 +1,2 @@
+docker build . -t ssmir/currency-converter
+docker run -p 3000:80 ssmir/currency-converter

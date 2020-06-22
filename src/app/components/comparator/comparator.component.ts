@@ -18,6 +18,8 @@ import { isNullOrUndefined } from "util";
   styleUrls: ["./comparator.component.scss"],
 })
 export class ComparatorComponent implements OnInit {
+
+  //Variables
   symbols = Symbols;
   filteredOptions: Observable<string[]>;
   ratesResponse: {
@@ -28,6 +30,7 @@ export class ComparatorComponent implements OnInit {
   errorMessage = "";
   calculatedValues: { symbol: string; value: string }[];
 
+  //Input form controls
   comparatorForm = new FormGroup({
     symbol: new FormControl(Symbols.EUR, [
       Validators.required,
@@ -40,6 +43,7 @@ export class ComparatorComponent implements OnInit {
   constructor(private currencyService: CurrencyService) {}
 
   ngOnInit(): void {
+    //Autocomplete for currency type input
     this.filteredOptions = this.comparatorForm.controls[
       "symbol"
     ].valueChanges.pipe(
@@ -47,8 +51,9 @@ export class ComparatorComponent implements OnInit {
       map((value) => this._optionsFilter(value))
     );
 
+    //Initial reqest for rates data
     this._getRates(this.comparatorForm.get("symbol").value).add(() => {
-      this._recalculate();
+      this.recalculate();
     });
 
     //Subscribe to currency amount changes with debounce time of 300ms
@@ -56,7 +61,7 @@ export class ComparatorComponent implements OnInit {
       .get("amount")
       .valueChanges.pipe(debounceTime(300))
       .subscribe((newValue) => {
-        this._recalculate();
+        this.recalculate();
       });
 
     merge(
@@ -67,12 +72,13 @@ export class ComparatorComponent implements OnInit {
       .subscribe((newValue) => {
         if (this.comparatorForm.status != "INVALID") {
           this._getRates(this.comparatorForm.get("symbol").value).add(() => {
-            this._recalculate();
+            this.recalculate();
           });
         }
       });
   }
 
+  //Validator for currency type input
   private _symbolValidator(allSymbols: any): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (isNullOrUndefined(control.value) || control.value === "") {
@@ -85,6 +91,7 @@ export class ComparatorComponent implements OnInit {
     };
   }
 
+  //Validator for currncy amount input
   private _amountValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (isNullOrUndefined(control.value) || control.value === "") {
@@ -94,6 +101,7 @@ export class ComparatorComponent implements OnInit {
     };
   }
 
+  //Filter for currency type input autocomplete
   private _optionsFilter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
@@ -102,6 +110,7 @@ export class ComparatorComponent implements OnInit {
     );
   }
 
+  //Validator for the date input
   private _datesValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (isNullOrUndefined(control.value) || control.value === "") {
@@ -117,7 +126,8 @@ export class ComparatorComponent implements OnInit {
     };
   }
 
-  public _datesFilter = (d: Date | null): boolean => {
+  //Filter for date input
+  public datesFilter = (d: Date | null): boolean => {
     if (d > new Date()) {
       return false;
     }
@@ -127,6 +137,7 @@ export class ComparatorComponent implements OnInit {
     return true;
   };
 
+  //Requests rates data from the api
   private _getRates(base: string) {
     if (this.comparatorForm.get("date").value != null) {
       return this.currencyService
@@ -153,7 +164,8 @@ export class ComparatorComponent implements OnInit {
     }
   }
 
-  public _recalculate() {
+  //Recalculats rates based on the user inpts. It does not make any requests to the api!
+  public recalculate() {
     if (this.ratesResponse && this.comparatorForm.status != "INVALID") {
       this.calculatedValues = [] as { symbol: string; value: string }[];
       let amount: number = parseFloat(this.comparatorForm.get("amount").value);
