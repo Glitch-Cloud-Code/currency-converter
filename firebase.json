@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/currency-converter",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+#container {
+  width: 100%;
+
+  mat-toolbar-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  #buttons-container {
+    display: flex;
+    justify-content: center;
+
+    button {
+      margin: 0 1rem 0 1rem;
+      background-color: #7B1FA2;
+      color: #fff;
+    }
+
+    .active {
+      background-color: #ae52d4;
+      color: #fff;
+      border: solid 1px #ff79ff;
+    }
+  }
+
+  @media only screen and (max-width: 780px) {
+    #logo {
+      display: none;
+    }
+    mat-toolbar-row {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}

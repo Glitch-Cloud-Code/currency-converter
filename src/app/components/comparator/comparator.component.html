@@ -1,0 +1,48 @@
+<div class="container">
+  <form class="currency-form">
+    <mat-form-field appearance="outline" class="">
+      <mat-label>Currency type</mat-label>
+      <input type="text" placeholder="Pick one" aria-label="Number" matInput
+        [formControl]="comparatorForm.controls['symbol']" [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-hint *ngIf="comparatorForm.controls['symbol'].errors && comparatorForm.controls['symbol'].errors['required']"
+        class="error"> Currenty type is required </mat-hint>
+      <mat-hint
+        *ngIf="comparatorForm.controls['symbol'].errors && comparatorForm.controls['symbol'].errors['unknownSymbol']"
+        class="error"> Unknown currency type </mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Currency amount</mat-label>
+      <input matInput [formControl]="comparatorForm.controls['amount']" placeholder="1.00">
+      <mat-hint *ngIf="comparatorForm.controls['amount'].errors && comparatorForm.controls['amount'].errors['required']"
+        class="error"> Amount is required </mat-hint>
+      <mat-hint
+        *ngIf="comparatorForm.controls['amount'].errors && comparatorForm.controls['amount'].errors['notNumeric']"
+        class="error"> Amount must be a numeric value </mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Choose a date</mat-label>
+      <input [matDatepickerFilter]="_datesFilter" [formControl]="comparatorForm.controls['date']" matInput [matDatepicker]="picker">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-hint
+        *ngIf="comparatorForm.controls['date'].errors && comparatorForm.controls['date'].errors['invalidDate']"
+        class="error"> Date must be between 1999 and today </mat-hint>
+    </mat-form-field>
+
+    <mat-card *ngIf="errorMessage" class="error error-card">
+      <mat-card-title>Oops! Something went wrong!</mat-card-title>
+      <mat-card-content>{{errorMessage}}</mat-card-content>
+    </mat-card>
+  </form>
+  <div id="results-card" *ngIf="!errorMessage">
+    <mat-card color="accent" class="symbol-card" *ngFor="let result of calculatedValues">
+      <h3>{{result.symbol}}</h3>
+      <p>{{result.value}}</p>
+    </mat-card>
+  </div>
+</div>

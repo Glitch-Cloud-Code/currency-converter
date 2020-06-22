@@ -1,0 +1,16 @@
+#app-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+app-top-bar {
+  grid-column: 1/7;
+}
+
+app-comparator {
+  grid-column: 2/6;
+}
+
+app-value-over-time {
+  grid-column: 2/6;
+}

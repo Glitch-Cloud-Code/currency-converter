@@ -1,0 +1,13 @@
+<div id="container" class="mat-elevation-z6">
+  <mat-toolbar color="primary" role="heading">
+    <mat-toolbar-row>
+      <div id="logo">
+        <span>Currency converter</span>
+      </div>
+      <div id="buttons-container">
+        <button mat-raised-button mat-button (click)="selectTab(tabs.RC)" [ngClass]="{'active': isTabSelected(tabs.RC)}">Rates converter</button>
+        <button mat-raised-button mat-button (click)="selectTab(tabs.ROT)" [ngClass]="{'active': isTabSelected(tabs.ROT)}">Rates over time</button>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>

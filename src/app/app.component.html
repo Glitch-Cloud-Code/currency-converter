@@ -1,0 +1,5 @@
+<div id="app-container">
+  <app-top-bar (tabChanged)="onTabChanged($event)"></app-top-bar>
+  <app-comparator *ngIf="selectedTab === tabs.RC"></app-comparator>
+  <app-value-over-time *ngIf="selectedTab === tabs.ROT"></app-value-over-time>
+</div>

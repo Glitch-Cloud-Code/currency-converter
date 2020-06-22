@@ -1,0 +1,76 @@
+<div id="rates-over-time-container">
+
+  <form class="currency-form">
+    <div class="field-group">
+      <mat-form-field appearance="outline">
+        <mat-label>First currency type</mat-label>
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+          [formControl]="formControls['firstSymbol']" [matAutocomplete]="firstSymbolAutocomplete">
+        <mat-autocomplete autoActiveFirstOption #firstSymbolAutocomplete="matAutocomplete">
+          <mat-option *ngFor="let option of firstSymbolFilteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-hint
+          *ngIf="formControls['firstSymbol'].errors && formControls['firstSymbol'].errors['required']"
+          class="error"> Currenty type is required </mat-hint>
+        <mat-hint
+          *ngIf="formControls['firstSymbol'].errors && formControls['firstSymbol'].errors['unknownSymbol']"
+          class="error"> Unknown currency type </mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Second currency type</mat-label>
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+          [formControl]="formControls['secondSymbol']" [matAutocomplete]="secondSymbolAutocomplete">
+        <mat-autocomplete autoActiveFirstOption #secondSymbolAutocomplete="matAutocomplete">
+          <mat-option *ngFor="let option of secondSymbolFilteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-hint
+          *ngIf="formControls['secondSymbol'].errors && formControls['secondSymbol'].errors['required']"
+          class="error"> Currenty type is required </mat-hint>
+        <mat-hint
+          *ngIf="formControls['secondSymbol'].errors && formControls['secondSymbol'].errors['unknownSymbol']"
+          class="error"> Unknown currency type </mat-hint>
+      </mat-form-field>
+    </div>
+    <div class="field-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Choose a starting date</mat-label>
+        <input [matDatepickerFilter]="_startDatesFilter" [formControl]="formControls['startDate']" matInput
+          [matDatepicker]="startPicker">
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+        <mat-hint
+          *ngIf="formControls['startDate'].errors && formControls['startDate'].errors['invalidDate']"
+          class="error"> Date must be between 1999 and today </mat-hint>
+          <mat-hint
+          *ngIf="formControls['startDate'].errors && formControls['startDate'].errors['endDateBeforeStartDate']"
+          class="error"> Start date can not be after end date </mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Choose a ending date</mat-label>
+        <input [matDatepickerFilter]="_endDatesFilter" [formControl]="formControls['endDate']" matInput
+          [matDatepicker]="endPicker">
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+        <mat-hint
+          *ngIf="formControls['endDate'].errors && formControls['endDate'].errors['invalidDate']"
+          class="error"> Date must be between 1999 and today </mat-hint>
+          <mat-hint
+          *ngIf="formControls['endDate'].errors && formControls['endDate'].errors['endDateBeforeStartDate']"
+          class="error"> End date can not be before start date </mat-hint>
+      </mat-form-field>
+    </div>
+
+    <mat-card *ngIf="errorMessage" class="error error-card">
+      <mat-card-title>Oops! Something went wrong!</mat-card-title>
+      <mat-card-content>{{errorMessage}}</mat-card-content>
+    </mat-card>
+  </form>
+
+  <mat-card id="graph-card">
+    <div id="graph" #graph></div>
+  </mat-card>
+</div>
