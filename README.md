@@ -5,9 +5,9 @@ For deploying this app on your local machine you will need:
 2. Angular CLI - (Run "npm install -g @angular/cli" in command line)
 3. [Docker for Windows](https://www.docker.com/products/docker-desktop).
 
-After installing these tools, just open the terminal in the root folder of the prject and run these commands:
-"docker build . -t ssmir/currency-converter"
-"docker run -p 3000:80 ssmir/currency-converter".
+After installing these tools, just open the terminal in the root folder of the project and run these commands:
+* "docker build . -t ssmir/currency-converter"
+* "docker run -p 3000:80 ssmir/currency-converter".
 
 Then head over to your browser and open "[http://localhost:3000/](http://localhost:3000/)".
 
